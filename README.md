@@ -81,3 +81,12 @@ context["data_dir"] 中保存选择、目标、预览、脱敏操作记录及短
 Linux 可使用 tools/Dockerfile.test 构建独立测试镜像；开发镜像构建时安装依赖，与正式插件运行分开。0.2.3 的 Windows 和独立 Linux 环境各 74 项测试通过；本轮 Linux 复用已固定依赖的开发镜像，只读挂载当前源码，测试时禁止外网。详见 docs/TEST-REPORT.md。
 
 原生组件只使用宿主语义 tone，跟随浅色 / 深色主题。最终宿主渲染、真实账号绑定与播放验收，以 docs/ACCEPTANCE.md 的证据为准。
+
+## GitHub Packages
+
+推送到 `main` 后，GitHub Actions 会构建并发布 GHCR OCI 软件包；也可在 Actions 页面手动运行 `Publish plugin package`。镜像内包含 `tgto-115-accounts-0.2.3-preview.zip`、源码包、README 和校验信息。
+
+    ghcr.io/kkswl/ttdxiaohao:0.2.3
+    ghcr.io/kkswl/ttdxiaohao:latest
+
+该 OCI 镜像用于分发插件文件，不是 TgtoDrive 的运行容器。拉取和提取安装包的方法见 [package/README.md](package/README.md)。
