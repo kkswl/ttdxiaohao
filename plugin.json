@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "tgto-115-accounts",
+  "name": "115 小号直连管理",
+  "version": "0.2.3",
+  "description": "管理员 115 账号池与已有 Emby 用户分配工作台。使用已核实的原生扫码流程及目录接口，沿用原系统绑定与 302 网关。",
+  "author": "Local development",
+  "entry": "plugin.py",
+  "timeout": 600,
+  "inputs": [
+    {"name":"base_url","label":"TgtoDrive 服务地址","type":"url","default":"http://127.0.0.1:12366","help":"插件进程访问的容器内地址；按实际监听端口配置。"},
+    {"name":"token_env","label":"OpenAPI Token 环境变量名称","type":"text","default":"TGTO_OPENAPI_TOKEN","help":"填写变量名。真实 Token 在容器运行环境中配置。"},
+    {"name":"api_token","label":"OpenAPI Token（可选，明文配置）","type":"password","default":"","help":"环境变量优先。宿主会保留明文任务参数；网页运行和保存设置还会写入明文 settings.json。密码框仅遮蔽显示。"},
+    {"name":"rule_id","label":"当前反代规则 ID","type":"text","default":"","help":"首次运行后，在结果中点击规则名称。"},
+    {"name":"account_name","label":"小号显示名称","type":"text","default":"","help":"用于创建或改名，1 至 120 个字符。"},
+    {"name":"folder_id","label":"接收目录 / 浏览父目录 ID","type":"text","default":"0","help":"保留字符串；浏览后填写目标 ID，再预览设置。"},
+    {"name":"folder_name","label":"目录名称","type":"text","default":"","help":"目录选择按钮会传入对应名称。"},
+    {"name":"parent_id","label":"目标目录的父目录 ID","type":"text","default":"0","help":"通过目录浏览中的选择按钮传入，保持字符串。"},
+    {"name":"login_app","label":"115 登录设备","type":"select","default":"web","options":[
+      {"value":"android","label":"115生活 Android"},{"value":"115android","label":"115 Android"},{"value":"web","label":"网页版"},
+      {"value":"ios","label":"115生活 iOS"},{"value":"115ios","label":"115 iOS"},{"value":"ipad","label":"115生活 iPad"},
+      {"value":"115ipad","label":"115 iPad"},{"value":"linux","label":"Linux"},{"value":"mac","label":"macOS"},
+      {"value":"tv","label":"Android 电视"},{"value":"apple_tv","label":"Apple TV"},{"value":"qandroid","label":"115管理 Android"},
+      {"value":"qios","label":"115管理 iOS"},{"value":"qipad","label":"115管理 iPad"},{"value":"alipaymini","label":"支付宝小程序"},
+      {"value":"wechatmini","label":"微信小程序"},{"value":"harmony","label":"鸿蒙"}
+    ]},
+    {"name":"search","label":"搜索已有用户","type":"search","default":""},
+    {"name":"action","label":"界面动作","type":"text","default":"refresh","help":"由结果按钮覆盖。首次运行保持 refresh；不建议配置定时写入。"},
+    {"name":"user_id","label":"交互用户 ID","type":"text","default":""},
+    {"name":"cloud_account_id","label":"交互小号 ID","type":"text","default":""},
+    {"name":"preview_id","label":"交互预览 ID","type":"text","default":""},
+    {"name":"user_page","label":"用户页码","type":"number","default":0,"min":0,"max":100000,"step":1},
+    {"name":"account_page","label":"账号页码","type":"number","default":0,"min":0,"max":100000,"step":1},
+    {"name":"folder_page","label":"目录页码","type":"number","default":0,"min":0,"max":100000,"step":1},
+    {"name":"rule_page","label":"规则页码","type":"number","default":0,"min":0,"max":100000,"step":1}
+  ],
+  "ui": {
+    "width":"full", "layout":"stack",
+    "components":[
+      {"type":"heading","text":"115 小号管理"},
+      {"type":"text","text":"首次配置服务地址后运行，使用结果工作台选择规则、账号和用户。"},
+      {"type":"tabs","children":[
+        {"type":"group","label":"连接与规则","children":[
+          {"type":"field","name":"base_url"}, {"type":"field","name":"token_env"}, {"type":"field","name":"api_token"},
+          {"type":"field","name":"rule_id"}, {"type":"field","name":"search"}
+        ]},
+        {"type":"group","label":"账号维护","children":[
+          {"type":"field","name":"account_name"}, {"type":"field","name":"login_app"},
+          {"type":"field","name":"folder_id"}, {"type":"field","name":"folder_name"}, {"type":"field","name":"parent_id"},
+          {"type":"alert","text":"重新登录或修改目录会影响关联用户；操作前会展示影响范围。","style":{"tone":"warning"}}
+        ]},
+        {"type":"group","label":"交互参数","children":[
+          {"type":"text","text":"这些参数由工作台按钮传入，通常无需手动修改。"},
+          {"type":"field","name":"action"}, {"type":"field","name":"user_id"},
+          {"type":"field","name":"cloud_account_id"}, {"type":"field","name":"preview_id"},
+          {"type":"field","name":"user_page"}, {"type":"field","name":"account_page"},
+          {"type":"field","name":"folder_page"}, {"type":"field","name":"rule_page"}
+        ]}
+      ]},
+      {"type":"button","label":"读取 / 刷新工作台","action":"run","params":{"action":"refresh"},"style":{"tone":"primary"}}
+    ]
+  }
+}

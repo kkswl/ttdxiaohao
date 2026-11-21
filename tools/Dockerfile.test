@@ -1,0 +1,13 @@
+# Developer test image only. Never used or installed by the TgtoDrive plugin.
+ARG PYTHON_IMAGE=python:3.13-slim
+FROM ${PYTHON_IMAGE}
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /work
+COPY requirements-dev.txt ./
+RUN python -m pip install --no-cache-dir -r requirements-dev.txt
+COPY plugin.json plugin.py README.md ./
+COPY account_manager ./account_manager
+COPY tests ./tests
+COPY tools ./tools
+COPY docs ./docs
+CMD ["python", "-m", "unittest", "discover", "-v"]
